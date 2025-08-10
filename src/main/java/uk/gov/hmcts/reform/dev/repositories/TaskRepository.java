@@ -5,4 +5,6 @@ import uk.gov.hmcts.reform.dev.models.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
+    Task findByTitle(String title);
+
 }
