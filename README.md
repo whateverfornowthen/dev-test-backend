@@ -1,10 +1,70 @@
-# HMCTS Dev Test Backend
-This will be the backend for the brand new HMCTS case management system. As a potential candidate we are leaving
-this in your hands. Please refer to the brief for the complete list of tasks! Complete as much as you can and be
-as creative as you want.
+# Dev Test Backend
 
-You should be able to run `./gradlew build` to start with to ensure it builds successfully. Then from that you
-can run the service in IntelliJ (or your IDE of choice) or however you normally would.
+![Swagger docs](assets/swagger.png)
 
-There is an example endpoint provided to retrieve an example of a case. You are free to add/remove fields as you
-wish.
+## Prerequisites
+
+- Docker installed and running
+- Java 21
+- IDE with Lombok support
+  - For IntelliJ: install the Lombok plugin and enable annotation processing — [learn more](https://bootify.io/next-steps/spring-boot-with-lombok.html)
+
+---
+
+## Build
+
+```bash
+./gradlew clean build
+```
+
+---
+
+## Run the Application
+
+```bash
+./gradlew bootRun
+```
+
+When starting the application, `docker compose up` is run automatically.
+
+> Docker must be running on the host to provide a Postgres instance.
+
+### Access
+- App: [`localhost:4000`](http://localhost:4000)
+- Swagger UI: [`localhost:4000/swagger-ui/index.html`](http://localhost:4000/swagger-ui/index.html)
+
+---
+
+## Run Tests
+
+All tests:
+```bash
+./gradlew test
+```
+
+Integration tests:
+```bash
+./gradlew integration
+```
+
+---
+
+## Docker
+
+The database is created and populated by [`./docker/init.sql`](./docker/init.sql).
+
+Recreate the database:
+```bash
+docker compose down
+docker volume rm dev-test-backend_pgdata
+```
+This removes all Postgres data, and seeds the DB from `init.sql`.
+
+---
+
+## Further Reading
+
+- [Gradle User Manual](https://docs.gradle.org/)
+- [Spring Boot Reference](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/jpa.html)
+- [Spring Boot Docker Compose](https://docs.spring.io/spring-boot/reference/features/dev-services.html#features.dev-services.docker-compose)
