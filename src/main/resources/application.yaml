@@ -1,5 +1,5 @@
 server:
-  port: 4000
+  port: ${SERVER_PORT}
   shutdown: "graceful"
 
 # If you want to use a database then uncomment the `group:, readiness: and include: "db"`
@@ -23,14 +23,25 @@ springdoc:
 
 spring:
   config:
-    import: "optional:configtree:/mnt/secrets/test/"
+    import: "optional:file:.env[.properties]"
   application:
     name: Dev Test
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}${DB_OPTIONS:}
-#    username: ${DB_USER_NAME}
-#    password: ${DB_PASSWORD}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}${DB_OPTIONS:}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+# commented out because we're now seeded the database with an init.sql script
+#  sql:
+#    init:
+#      mode: always
+#  jpa:
+#    hibernate:
+#      ddl-auto: update   # Options: none, validate, update, create, create-drop
+#    show-sql: true        # Optional: Logs SQL to console
+#    properties:
+#      hibernate:
+#        format_sql: true
 #    properties:
 #      charSet: UTF-8
 #    hikari:
