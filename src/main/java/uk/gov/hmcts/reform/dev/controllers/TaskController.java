@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.dev.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +31,18 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    @Operation(summary = "Get all tasks")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks")
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 
+    @Operation(summary = "Get a task by ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Task found"),
+        @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(
         @Parameter(description = "ID of the task to retrieve") @PathVariable Long id) {
@@ -40,6 +50,9 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
+    @Operation(summary = "Add a new task")
+    @ApiResponse(responseCode = "201", description = "Task successfully created")
+    @ApiResponse(responseCode = "400", description = "Invalid data provided")
     @PostMapping
     public ResponseEntity<Task> addTask(
         @Parameter(description = "Task to be added") @Valid @RequestBody Task task) {
@@ -47,6 +60,11 @@ public class TaskController {
         return ResponseEntity.status(CREATED).body(savedTask);
     }
 
+    @Operation(summary = "Update an existing task")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Task successfully updated"),
+        @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(
         @Parameter(description = "ID of the task to update") @PathVariable Long id,
@@ -55,6 +73,12 @@ public class TaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @Operation(summary = "Update the status of an existing task")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Task status successfully updated"),
+        @ApiResponse(responseCode = "404", description = "Task not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid status provided")
+    })
     @PatchMapping("/{id}/status")
     public ResponseEntity<Task> updateTaskStatus(
         @Parameter(description = "ID of the task to update") @PathVariable Long id,
@@ -63,6 +87,11 @@ public class TaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @Operation(summary = "Delete a task by ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Task successfully deleted"),
+        @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(
         @Parameter(description = "ID of the task to delete") @PathVariable Long id) {
